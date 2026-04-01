@@ -4,3 +4,4 @@ dist-prerender
 .env
 *.env
 ca.pem
+ca_base64.txt
