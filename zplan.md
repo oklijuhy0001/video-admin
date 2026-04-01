@@ -628,3 +628,22 @@ Keep-alive: cả 2 `App.vue` ping `/health` mỗi 14 phút.
 | Aiven 2 pool × 5 = 10 connections | Free tier ~25 — an toàn |
 | Render cold start ~30s | Keep-alive mỗi 14 phút |
 | File trùng tên trong repo | Prefix `<timestamp>_` tự động |
+
+---
+
+## 14. UI Updates
+
+### 14.1 Site name — top left (fixed)
+- Component: `VideoFeed.vue`
+- Element: `<div class="site-name">🎬 VideoSite</div>`
+- CSS: `position: fixed; top: 14px; left: 16px; z-index: 100`
+- Hiển thị trên tất cả video khi scroll, không bị che khuất
+
+### 14.2 Share button — bottom right của mỗi video
+- Component: `VideoItem.vue`
+- Vị trí: góc phải dưới overlay, `flex-shrink: 0` cạnh `.info`
+- Icon: SVG share (3 circle + 2 line)
+- Logic:
+  - Mobile (có `navigator.share`): gọi native share sheet
+  - Desktop: copy URL vào clipboard, đổi icon thành ✅ trong 2 giây
+- URL share: `{origin}/v/{id}-{slug}` — trang có meta SEO đầy đủ
