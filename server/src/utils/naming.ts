@@ -1,15 +1,14 @@
 import fs from 'fs'
 import path from 'path'
-import { glob } from 'glob'
 
 let names: string[] = []
 
 export const loadNames = (): void => {
-  const pattern = path.join(__dirname, '../../data/*.txt')
-  const files = glob.sync(pattern)
+  const dataDir = path.join(process.cwd(), 'data')
+  const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.txt')).map(f => path.join(dataDir, f))
 
   if (files.length === 0) {
-    throw new Error(`No .txt files found in data/ directory (pattern: ${pattern})`)
+    throw new Error(`No .txt files found in data/ directory`)
   }
 
   names = files.flatMap((f) =>

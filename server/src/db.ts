@@ -3,12 +3,10 @@ import { Pool } from 'pg'
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 5,
-  ssl: {
-    rejectUnauthorized: false,
-    ca: process.env.CA_CERT_BASE64 
-      ? Buffer.from(process.env.CA_CERT_BASE64, 'base64').toString('utf-8')
-      : undefined,
-  },
+  ssl: process.env.CA_CERT_BASE64 ? {
+    ca: Buffer.from(process.env.CA_CERT_BASE64, 'base64').toString(),
+    rejectUnauthorized: true,
+  } : undefined,
 })
 
 pool.on('connect', () => {
