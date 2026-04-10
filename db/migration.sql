@@ -16,3 +16,10 @@ CREATE TABLE IF NOT EXISTS videos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_videos_name ON videos(name);
+
+CREATE TABLE IF NOT EXISTS admin_password (
+  id       SERIAL PRIMARY KEY,
+  password TEXT NOT NULL
+);
+
+INSERT INTO admin_password (password) VALUES ('987a@A321a@A');

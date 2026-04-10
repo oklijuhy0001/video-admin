@@ -1,5 +1,13 @@
+const getAuthHeader = () => {
+  const auth = localStorage.getItem('auth')
+  return auth ? { Authorization: 'Bearer authenticated' } : {}
+}
+
 const apiFetch = async (path, options = {}) => {
-  const res = await fetch(path, options)
+  const res = await fetch(path, {
+    ...options,
+    headers: { ...getAuthHeader(), ...options.headers },
+  })
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }))
     throw new Error(err.error || `HTTP ${res.status}`)
