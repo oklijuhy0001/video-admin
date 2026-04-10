@@ -19,13 +19,13 @@ export const createPagesProject = async (
       headers: headers(),
       body: JSON.stringify({
         name: projectName,
-        production_branch: 'main',
+        production_branch: 'dev',
         source: {
           type: 'github',
           config: {
             owner: githubUser(),
             repo_name: repoName,
-            production_branch: 'main',
+            production_branch: 'dev',
             pr_comments_enabled: false,
             deployments_enabled: true,
           },

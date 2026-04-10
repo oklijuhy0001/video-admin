@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <Login v-if="!isAuthenticated" @login="isAuthenticated = true" />
+  <div v-else>
     <header>
       <h1>🎬 Video Admin</h1>
+      <button class="logout-btn" @click="logout">Logout</button>
     </header>
     <nav>
       <button
@@ -23,11 +25,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import Login from './components/Login.vue'
 import HealthTab from './components/HealthTab.vue'
 import RepoTable from './components/RepoTable.vue'
 import VideoTable from './components/VideoTable.vue'
 import UploadTab from './components/UploadTab.vue'
+
+const isAuthenticated = computed(() => {
+  const authStr = localStorage.getItem('auth')
+  if (!authStr) return false
+  try {
+    const auth = JSON.parse(authStr)
+    return auth.expires > Date.now()
+  } catch {
+    return false
+  }
+})
+
+const logout = () => {
+  localStorage.removeItem('auth')
+  window.location.reload()
+}
 
 const tabs = [
   { id: 'health', label: '🩺 Health' },
@@ -37,8 +56,27 @@ const tabs = [
 ]
 const activeTab = ref('health')
 
-// Keep-alive: ping every 14 minutes so Render free tier doesn't sleep
 onMounted(() => {
-  setInterval(() => fetch('/health').catch(() => {}), 14 * 60 * 1000)
+  setInterval(() => {
+    if (isAuthenticated.value) {
+      fetch('/health', { headers: { Authorization: 'Bearer authenticated' } }).catch(() => {})
+    }
+  }, 14 * 60 * 1000)
 })
 </script>
+
+<style scoped>
+.logout-btn {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.logout-btn:hover {
+  background: #ff5252;
+}
+</style>
